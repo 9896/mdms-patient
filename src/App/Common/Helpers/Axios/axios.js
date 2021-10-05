@@ -5,15 +5,23 @@ import swal from "vue-sweetalert2";
 import 'sweetalert2/dist/sweetalert2.min.css';
 
 
-
-Vue.prototype.$axios = Axios.create({
+let axios = Axios.create({
     baseURL: process.env.VUE_APP_API_ROOT,
-});
+//     headers: {
+//         'Accept': 'application/json',
+//         'Content-Type': 'application/json',
+//         'Access-Control-Allow-Origin': '*',
+//         'Access-Control-Allow-Headers': '*',
+//       },
+ });
+
+
+Vue.prototype.$axios = axios
 
 //Request interceptor
 Vue.prototype.$axios.interceptors.request.use(
     function (config) {
-        config.headers.authorization = 'Bearer ' + store.getters.access_token;
+        config.headers.Authorization = 'Bearer ' + store.getters.access_token;
         return config
     },
     function (error) {
@@ -68,3 +76,5 @@ Vue.prototype.$axios.interceptors.response.use(
         return Promise.reject(error);
     }
 );
+
+export default axios;

@@ -1,12 +1,76 @@
 <template>
-  <main-layout>
-    <template slot="main-header">
-      all <br />{{ this.$store.access_token }}
-      <button @click="logIn" class="btn btn-primary">Submit</button>
-      <button @click="alertDisplay" class="btn btn-danger">Submit</button>
-      <button @click="alertDisplayOne" class="btn btn-secondary">Submit</button>
-    </template>
-  </main-layout>
+  <div ref="diseaseContainer">
+    <div class="row">
+      <div class="col-4">
+        <v-text-field
+          v-model="diseaseName"
+          label="Search by Disease Name"
+        ></v-text-field>
+      </div>
+      <div class="col-4">
+        <v-btn small @click="searchDisease"> Search </v-btn>
+      </div>
+    </div>
+    <p v-if="emptyQuery" class="text-danger font-weight-light">
+      {{ emptyQuery }}
+    </p>
+    <p v-if="searchQuery && !noDiseases">
+      Showing Results For: {{ staticDiseaseName }}
+    </p>
+    <p v-if="noDiseases">{{ noSymtoms }}</p>
+    <a
+      class="btn"
+      href="#"
+      @click="getAllDiseases"
+      v-if="searchQuery || diseases.length == 0"
+    >
+      <i class="fas fa-sync"></i>Reload Diseases
+    </a>
+
+    <v-data-table
+      :headers="headers"
+      :items="diseases"
+      disable-pagination
+      :hide-default-footer="true"
+    >
+      <template v-slot:item.actions="{ item }">
+        <div class="nowrap-buttons">
+          <router-link
+            class="btn btn-tooltip"
+            data-toggle="tooltip"
+            data-placement="top"
+            title="Edit"
+            data-container="body"
+            data-animation="true"
+            :to="{ name: 'EditDisease', params: { uuid: item.uuid } }"
+          >
+            <i class="fas fa-edit"></i>
+          </router-link>
+          <a
+            class="btn btn-tooltip"
+            data-toggle="tooltip"
+            data-placement="top"
+            title="Delete"
+            data-container="body"
+            data-animation="true"
+            href="#"
+            @click="deleteAlertDisplay(item.uuid)"
+          >
+            <i class="fas fa-trash-alt"></i>
+          </a>
+        </div>
+      </template>
+    </v-data-table>
+
+    <div class="text-center pt-2">
+      <v-pagination
+        v-model="page"
+        :length="pageCount"
+        :total-visible="6"
+        @input="handlePageChange"
+      ></v-pagination>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -15,52 +79,232 @@ export default {
   data() {
     return {
       loader: "dots",
-      token: ""
+      diseases: [],
+      diseaseName: "",
+      staticDiseaseName: "",
+      searchQuery: false,
+      noDiseases: false,
+      emptyQuery: false,
+      page: undefined,
+      pageCount: undefined,
+      activePage: "",
+      headers: [
+        { text: "Diseases", align: "start", value: "name" },
+        { text: "Content", sortable: false, value: "content"},
+        {text: "Prevalence Rate", sortable: false, value: "prevelance_rate"},
+        {text: "Age start", sortable: false, value: "age_start"},
+        {text: "Age end", sortable: false, value: "age_end"},
+        { text: "Actions", sortable: false, value: "actions" },
+      
+      ],
     };
   },
   components: {},
 
+  /**
+   * methods
+   */
+
   methods: {
-    logIn() {
-      this.$store.dispatch('set_token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIyIiwianRpIjoiN2RhZGE0MmE4OGE0YmZlZWZmZTUwMDA5ZTQ3NzY2ZGU0NTRhODI2ZjIwZTE5ZWYwNDMyMzYwZDM2MzBiOTJiZDcyNDM5NmUwZGQ0MjM3ZjIiLCJpYXQiOjE2MzE4NDM5MjUuOTQ0NjU3LCJuYmYiOjE2MzE4NDM5MjUuOTQ0NzM1LCJleHAiOjE2NjMzNzk5MjUuNTMzNTMzLCJzdWIiOiIyIiwic2NvcGVzIjpbXX0.at1pPAzpqK9StFWVH4joVKZ-cA8mt3m1FwDGK7Rgcti_gc_gRn_IEj8bpxvL8IpaV5Xv2P4Bc2Na7_mRWZJUkhXVQLuD95qAeSOGV2XPsndGdUkxibgPApt0H94kqNOkPjXGTns6cgRGun4kisnpYOFVyA1tMgXCvCSnFZnafMqNNmHoUb64QTfTUxLH6fVSIy8xmtYNT32aMQWWYb9wLeNabnAKbvtp_6m_028HZ4QuXA9TMfLpUN5guDQvO3NfLQzM2TEwjiXz2WAIBSBxOzliw-_jg5MNdTbnpCpWHgYZ0vhhkc4D4kvi2B7DwIsFRTcdjKJpPwVbUmazuziHMH2ly3vp8JWw_2y-6a_Jc5dOzSl1SIvyG5MIj0NtZW04lBaX-nt6tbNwMhm5VIX6XvYrcMSa6_JZ1okh7Hyr0nJ-LfxqJ5jkEjvoz6zPD9VnRZiIpWCtff4aEL_o_RuJSU3edRNhwx6qsAM4JYv4qBNPbHeLKcYCjMvpGLLgfTYszR9MwOQQKFPAodE52b6gKTVEeYSr9rGer1Bh4O5KSf7Mqzq540clxBCUzeOF5_aTyWfsIdBN9O6V11japdOzbJxozSEtOvE3nPPogT73VgnZY7DyIbboczyLl1HPLCYdbnv7xfu4Xs0YPDAG_HbpoqwQPY2buj87FdpMNzdilYc')
-      this.token = this.$store.getters.access_token
+    /**
+     * Get all diseases
+     * 
+     * @param null
+     * @return {null}
+     */
+    getAllDiseases() {
+      this.searchQuery = false;
+      this.diseaseName = "";
+      this.emptyQuery = false;
+      let diseaseContainer = this.$refs.diseaseContainer;
+      console.log(this.$refs.diseaseContainer);
       let loader = this.$loading.show({
-        //container: null,
-        isFullPage: true,
+        container: diseaseContainer,
+        //isFullPage: false,
         loader: this.loader,
+        //canCancel: true,
+        onCancel: this.cancelled,
       });
-      setTimeout(() => {
-        loader.hide();
-      }, 3000);
+      //get-all for diseases
+      this.$axios
+        .get("disease/admin/diseases/get-all", {
+          params: {
+            page: this.page,
+          },
+        })
+        .then((response) => {
+          let unMappedDiseases = response.data.data;
+          this.diseases = [];
+          this.diseases = unMappedDiseases.map(this.getDisplayDisease);
+          this.page = response.data.meta.current_page;
+          this.pageCount = response.data.meta.last_page;
+          console.log("From Get all Diseases: " + this.page);
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => loader.hide());
     },
 
-    alertDisplay() {
+    /**
+     * Link to data-table headers
+     * 
+     * @param {disease}
+     * @return {disease} The disease Object
+     */
+    getDisplayDisease(disease) {
+      let slicedContent;
+      if(disease.content.length > 45){
+        slicedContent = disease.content.slice(0, 45) + "...";
+      }
+      //kdkd
+      return {
+        name: disease.name,
+        uuid: disease.uuid,
+        content: slicedContent,
+        prevlance_rate: disease.prevelance_rate,
+        age_start: disease.age_start,
+        age_end: disease.age_end,
+
+      };
+    },
+
+    /**
+     * Handle page change
+     * 
+     * @param { number } value The page number clicked
+     * @return { null } 
+     */
+    handlePageChange(value) {
+      this.page = value;
+      if (this.searchQuery == false) {
+        this.getAllDiseases();
+      } else {
+        this.searchDisease();
+      }
+      console.log(value);
+    },
+
+    /**
+     * Search specific symtom(s)
+     * 
+     * @param { null }
+     * @return { string } noDisease No disease found
+     */
+    searchDisease() {
+      let diseaseContainer = this.$refs.diseaseContainer;
+      this.diseases = [];
+      this.emptyQuery = false;
+      this.page = undefined;
+      //this.emptyQuery
+      let loader = this.$loading.show({
+        container: diseaseContainer,
+        //isFullPage: false,
+        loader: this.loader,
+        //canCancel: true,
+        onCancel: this.cancelled,
+      });
+      //get-all for diseases
+      this.$axios
+        .post(
+          "disease/admin/diseases/get-diseases",
+          {
+            disease: this.diseaseName,
+          },
+          {
+            params: {
+              page: this.page,
+            },
+          }
+        )
+        .then((response) => {
+          let unMappedDiseases = [];
+          unMappedDiseases = response.data.data;
+          this.diseases = [];
+          this.searchQuery = true;
+          this.staticDiseaseName = this.diseaseName;
+          if (unMappedDiseases.length == 0) {
+            return (this.noDiseases = response.data);
+          }
+          this.diseases = unMappedDiseases.map(this.getDisplayDisease);
+          this.page = response.data.meta.current_page;
+          this.pageCount = response.data.meta.last_page;
+
+          console.log("hehe" + response.data);
+        })
+        .catch((error) => {
+          console.log("Custom Error:" + error);
+          if (error.response.data.errors.disease) {
+            this.emptyQuery = error.response.data.errors.disease[0];
+         }
+        })
+        .finally(() => loader.hide());
+    },
+    
+    /**
+     * Delete disease
+     * 
+     * @param { string } uuid
+     * @return { null }
+     */
+    deleteDisease(uuid) {
+      let diseaseContainer = this.$refs.diseaseContainer;
+      //this.emptyQuery
+      let loader = this.$loading.show({
+        container: diseaseContainer,
+        //isFullPage: false,
+        loader: this.loader,
+        //canCancel: true,
+        onCancel: this.cancelled,
+      });
+      //get-all for diseases
+      let url = "disease/admin/diseases/delete-disease/" + uuid;
+      this.$axios
+        .post(url)
+        .then((response) => {
+          console.log("hehe" + response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => loader.hide());
+    },
+
+    deleteAlertDisplay(uuid) {
       this.$swal({
         title: "Are you sure?",
         text: "You can't revert your action",
         type: "warning",
         showCancelButton: true,
-        confirmButtonText: "Yes Delete it!",
-        cancelButtonText: "No, Keep it!",
+        confirmButtonText: "Delete",
+        cancelButtonText: "Cancel",
         showCloseButton: true,
         showLoaderOnConfirm: true,
       }).then((result) => {
+        console.log(result.value);
         if (result.value) {
-          this.$swal(
-            "Deleted",
-            "You successfully deleted this file",
-            "success"
-          );
-        } else {
-          this.$swal("Cancelled", "Your file is still intact", "info");
-        }
+          this.deleteDisease(uuid);
+          this.getAllDiseases();
+        } 
       });
     },
-
-          alertDisplayOne() {
-        // $swal function calls SweetAlert into the application with the specified configuration.
-        this.$swal('Heading', 'this is a Heading', 'OK');
-      }
+  },
+  mounted() {
+    this.getAllDiseases();
   },
 };
 </script>
+
+<style scoped>
+.cont {
+  position: relative;
+}
+
+.nowrap-buttons {
+  white-space: nowrap !important;
+}
+
+.search-group {
+  white-space: nowrap;
+}
+</style>

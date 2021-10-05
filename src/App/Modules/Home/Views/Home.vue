@@ -16,6 +16,9 @@ export default {
     components: {
         MainLayout,
         MainHeader
+    },
+    mounted() {
+        
     }
 }
 </script>

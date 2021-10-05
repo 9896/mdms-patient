@@ -6,17 +6,17 @@ import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
 import VueSweetAlert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
+import vuetify from './plugins/vuetify'
+import CKEditor from '@ckeditor/ckeditor5-vue2';
 
 import { MainLayout } from "@/App/Common/Helpers/Layout";
 import router from './router';
 import store from './store';
 require("./App/Common/Helpers/Axios/axios");
 import Authentication from "@/App/Common/Mixins/Authentication";
+import SymptomDataService from "@/App/Common/Services/SymptomDataService"
 
-// import Axios from 'axios';
-// Vue.prototype.$axios = Axios.create({
-//     baseURL: process.env.VUE_APP_API_ROOT,
-// });
+
 
 Vue.config.productionTip = false
 
@@ -32,12 +32,15 @@ Vue.use(Loading, {
   zIndex: 999,
   //isFullPage: true,
 });
-Vue.use(VueSweetAlert2)
+Vue.use(VueSweetAlert2);
+Vue.use( CKEditor );
 
 Vue.mixin( Authentication );
+Vue.mixin( SymptomDataService );
 
 new Vue({
   router,
   store,
-  render: h => h(App),
+  vuetify,
+  render: h => h(App)
 }).$mount('#app')

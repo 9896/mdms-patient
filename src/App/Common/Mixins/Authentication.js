@@ -3,12 +3,13 @@ import {mapGetters} from "vuex"
 let Authentication = {
     data() {
         return{
-            authentication_loader: false
+            authentication_loader: false,
+            loader: "dots",
         }
     },
 
     methods: {
-         setUserDetails(url = '/admin-user/me', redirect = true) {
+         setUserDetails(url = '/admin-user/me') {//not that a second argument redirect=true, has been removed
              this.authentication_loader = true
         //     // user/me
              this.$axios.get(url)
@@ -19,9 +20,9 @@ let Authentication = {
                     this.$store.dispatch('set_user', user);
                     this.authentication_loader = false;
 
-                    if(redirect){
-                    this.$router.push({name: 'Home'});
-                    }
+                    // if(redirect){
+                    // this.$router.push({name: 'Home'});
+                    // }
                 }
              })
              .catch(error => {
@@ -36,7 +37,13 @@ let Authentication = {
          * Logout
          */
         logOut(){
-            this.authentication_loader = true;
+            //this.authentication_loader = true;
+            let loader = this.$loading.show({
+                //isFullPage: false,
+                loader: this.loader,
+                //canCancel: true,
+                onCancel: this.cancelled,
+              });
             this.$axios({
                 baseURL: process.env.VUE_APP_AUTH_API_ROOT,
                 url: '/admin/log-out',
@@ -44,12 +51,16 @@ let Authentication = {
                 data: this.logInData
             }).then(() => {
                 this.$store.dispatch('logout');
+                this.$router.push({name: 'Login'});
             })
             .catch(err => {
-                this.$store.dispatch('logout').then();
+                this.$store.dispatch('logout');
+                this.$router.push({name: 'Login'});
                 console.log(err)
             })
-            .finally(()=> this.authentication_loader = false)
+            .finally(()=> {
+                loader.hide();
+            })
         },
     },
 

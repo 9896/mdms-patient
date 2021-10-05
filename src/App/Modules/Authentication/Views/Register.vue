@@ -41,27 +41,10 @@
               <div class="card bg-secondary border-0">
                 <div class="card-header bg-transparent pb-5">
                   <div class="text-muted text-center mt-2 mb-4">
-                    <small>Sign up with</small>
-                  </div>
-                  <div class="text-center">
-                    <a href="#" class="btn btn-neutral btn-icon mr-4">
-                      <span class="btn-inner--icon"
-                        ><img src=""
-                      /></span>
-                      <span class="btn-inner--text">Github</span>
-                    </a>
-                    <a href="#" class="btn btn-neutral btn-icon">
-                      <span class="btn-inner--icon"
-                        ><img src=""
-                      /></span>
-                      <span class="btn-inner--text">Google</span>
-                    </a>
+                    <small>Sign up</small>
                   </div>
                 </div>
                 <div class="card-body px-lg-5 py-lg-5">
-                  <div class="text-center text-muted mb-4">
-                    <small>Or sign up with credentials</small>
-                  </div>
                   <form role="form">
                     <div class="form-group">
                       <div
@@ -119,14 +102,7 @@
                         />
                       </div>
                     </div>
-                    <div class="text-muted font-italic">
-                      <small
-                        >password strength:
-                        <span class="text-success font-weight-700"
-                          >strong</span
-                        ></small
-                      >
-                    </div>
+
                     <div class="row my-4">
                       <div class="col-12">
                         <div
@@ -173,10 +149,9 @@
 import AuthLayout from "@/App/Modules/Authentication/Components/AuthLayout";
 
 export default {
-    name: "Register",
-    components: {
-        AuthLayout,
-    }
-
-}
+  name: "Register",
+  components: {
+    AuthLayout,
+  },
+};
 </script>

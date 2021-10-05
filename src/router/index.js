@@ -15,6 +15,7 @@ router.beforeEach((to, from, next) => {
       //for a route that requires auth
       //check if they are authenticated
       if (store.getters.isAuthenticated) {
+        console.log(store.getters.isAuthenticated);
         // check role level
         //check if user is admin
         //check if user is authorized

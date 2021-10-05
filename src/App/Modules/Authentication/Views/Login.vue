@@ -39,24 +39,11 @@
             <div class="card bg-secondary border-0 mb-0">
               <div class="card-header bg-transparent pb-5">
                 <div class="text-muted text-center mt-2 mb-3">
-                  <small>Sign in with</small>
-                </div>
-                <div class="btn-wrapper text-center">
-                  <a href="#" class="btn btn-neutral btn-icon">
-                    <span class="btn-inner--icon"><img src="" /></span>
-                    <span class="btn-inner--text">Github</span>
-                  </a>
-                  <a href="#" class="btn btn-neutral btn-icon">
-                    <span class="btn-inner--icon"><img src="" /></span>
-                    <span class="btn-inner--text">Google</span>
-                  </a>
+                  <small>Sign in</small>
                 </div>
               </div>
               <div class="card-body px-lg-5 py-lg-5">
-                <div class="text-center text-muted mb-4">
-                  <small>Or sign in with credentials</small>
-                </div>
-                <form role="form">
+                <form role="form" class="sign-in-form">
                   <div class="form-group mb-3">
                     <div
                       class="
@@ -135,18 +122,6 @@
                 </form>
               </div>
             </div>
-            <div class="row mt-3">
-              <div class="col-6">
-                <a href="#" class="text-light"
-                  ><small>Forgot password?</small></a
-                >
-              </div>
-              <div class="col-6 text-right">
-                <a href="#" class="text-light"
-                  ><small>Create new account|||{{rep}}|||{{loginData.email}}</small></a
-                >
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -169,7 +144,6 @@ export default {
       formError: [],
       loader: "spinner",
       rep: "",
-
     };
   },
 
@@ -185,33 +159,22 @@ export default {
 
       this.formError = [];
       this.$axios
-        .post("/authentication/admins/login",this.loginData)
-        .then(
-          (response) => {
-            let token = response;
-            this.rep = response["data"]["access_token"];
-            console.log("then On top of if(token):" +this.rep);
-            //Store token
-            if (token) {
-              console.log("then Inside if(token): "+response["data"]);
-              this.$store.dispatch("set_token", token['access_token']);
-              this.setUserDetails("/admin/me");
-            }
-            console.log("then Below if(token):" + token);
-          } //,error => {
-
-          //   console.log("blah from then: "+error.response.data.errors.email);
-          // }
-          
-        )
-        .catch((err) => {
-          if(err.response){
-          if (err.response.data.errors !== undefined) {
-            this.formError = err.response.data.errors;
+        .post("/authentication/admins/login", this.loginData)
+        .then((response) => {
+          let token = response.data[0].access_token;
+          if (token) {
+            this.$store.dispatch("set_token", token);
+            this.setUserDetails("/admin/me");
+            this.$router.push({ name: "Home" });
           }
+        })
+        .catch((err) => {
+          if (err.response) {
+            if (err.response.data.errors !== undefined) {
+              this.formError = err.response.data.errors;
+            }
           }
           console.log("blah:" + err);
-          console.log("In catch block");
         })
         .finally(() => loader.hide());
     },
@@ -222,3 +185,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.signa-in-form {
+  margin-bottom: 90px;
+}
+</style>

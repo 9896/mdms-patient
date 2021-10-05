@@ -1,18 +1,10 @@
 <template>
-    <main-layout>
-        <template slot="main-header">
-articles
-        </template>
-    </main-layout>
+  <div>Articles</div>
 </template>
 
 <script>
-
-
 export default {
-    name: "Articles",
-    components: {
-
-    }
-}
+  name: "Articles",
+  components: {},
+};
 </script>

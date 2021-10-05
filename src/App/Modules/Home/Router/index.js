@@ -6,12 +6,9 @@ export default [
         path: "/",
         component: Home,
         name: "Home",
-        // children: [
-        //     ...DiseaseRoutes
-        // ],
         meta: {
-            title: "Home"
-            
+            title: "Home",
+            requiresAuth: true
         }
     }
 ]
