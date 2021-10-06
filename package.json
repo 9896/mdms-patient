@@ -5,15 +5,18 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "start": "node server.js"
   },
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^30.0.0",
     "@ckeditor/ckeditor5-vue2": "^1.0.5",
     "axios": "^0.21.4",
     "core-js": "^3.6.5",
+    "express": "^4.17.1",
     "jquery": "^3.6.0",
     "moment": "^2.29.1",
+    "serve-static": "^1.14.1",
     "sweetalert": "^2.1.2",
     "vue": "^2.6.11",
     "vue-clickaway": "^2.2.2",
