@@ -1,123 +1,126 @@
 <template>
-  <form ref="diseaseContainer">
-    <!-- Name field -->
-    <div class="form-group">
-      <label for="disease-name">Edit Disease</label>
-      <input
-        v-model="disease.name"
-        type="text"
-        class="form-control"
-        id="disease-name"
-        placeholder="Disease Name"
-      />
-    </div>
-    <p v-if="errorResponse.name" class="text-danger font-weight-light">
-      {{ errorResponse.name[0] }}
-    </p>
-    <!-- Content field -->
-    <div class="form-group">
-      <label for="content">Disease Content</label>
-      <ckeditor
-        :editor="editor"
-        v-model="editorData"
-        :config="editorConfig"
-      ></ckeditor>
-    </div>
-    <p v-if="errorResponse.content" class="text-danger font-weight-light">
-      {{ errorResponse.content[0] }}
-    </p>
+  <div>
+    <h1>Create Disease</h1>
+    <form ref="diseaseContainer">
+      <!-- Name field -->
+      <div class="form-group">
+        <label for="disease-name">Disease Name</label>
+        <input
+          v-model="disease.name"
+          type="text"
+          class="form-control"
+          id="disease-name"
+          placeholder="Disease Name"
+        />
+      </div>
+      <p v-if="errorResponse.name" class="text-danger font-weight-light">
+        {{ errorResponse.name[0] }}
+      </p>
+      <!-- Content field -->
+      <div class="form-group">
+        <label for="content">Disease Content</label>
+        <ckeditor
+          :editor="editor"
+          v-model="editorData"
+          :config="editorConfig"
+        ></ckeditor>
+      </div>
+      <p v-if="errorResponse.content" class="text-danger font-weight-light">
+        {{ errorResponse.content[0] }}
+      </p>
 
-    <!--Prevelance rate field  -->
-    <div class="form-group">
-      <label for="prevelance-rate">Edit Prevalence Rate</label>
-      <input
-        v-model="disease.prevelance_rate"
-        type="digit"
-        class="form-control"
-        id="prevelance-rate"
-        placeholder="Prevalence Rate"
-      />
-    </div>
-    <p
-      v-if="errorResponse.prevelance_rate"
-      class="text-danger font-weight-light"
-    >
-      {{ errorResponse.prevelance_rate[0] }}
-    </p>
+      <!--Prevelance rate field  -->
+      <div class="form-group">
+        <label for="prevelance-rate">Edit Prevalence Rate</label>
+        <input
+          v-model="disease.prevelance_rate"
+          type="digit"
+          class="form-control"
+          id="prevelance-rate"
+          placeholder="Prevalence Rate"
+        />
+      </div>
+      <p
+        v-if="errorResponse.prevelance_rate"
+        class="text-danger font-weight-light"
+      >
+        {{ errorResponse.prevelance_rate[0] }}
+      </p>
 
-    <!-- Age start field -->
-    <div class="form-group">
-      <label for="age-start">Edit Age start</label>
-      <input
-        v-model="disease.age_start"
-        type="digit"
-        class="form-control"
-        id="age-start"
-        placeholder="Disease starting age"
-      />
-    </div>
+      <!-- Age start field -->
+      <div class="form-group">
+        <label for="age-start">Edit Age start</label>
+        <input
+          v-model="disease.age_start"
+          type="digit"
+          class="form-control"
+          id="age-start"
+          placeholder="Disease starting age"
+        />
+      </div>
 
-    <!-- Age end field -->
-    <div class="form-group">
-      <label for="age-end">Edit Age end</label>
-      <input
-        v-model="disease.age_end"
-        type="digit"
-        class="form-control"
-        id="age-end"
-        placeholder="Disease ending age"
-      />
-    </div>
+      <!-- Age end field -->
+      <div class="form-group">
+        <label for="age-end">Edit Age end</label>
+        <input
+          v-model="disease.age_end"
+          type="digit"
+          class="form-control"
+          id="age-end"
+          placeholder="Disease ending age"
+        />
+      </div>
 
-    <!-- Link symptoms field -->
-    <label for="link-symptom">Link Symptoms</label>
-    <v-autocomplete
-      :items="symptoms"
-      v-model="disease.symptoms"
-      item-text="name"
-      item-value="uuid"
-      chips
-      deletable-chips
-      filled
-      multiple
-      solo
-      label="Link Symptoms"
-    ></v-autocomplete>
-    <p v-if="errorResponse.symptom" class="text-danger font-weight-light">
-      {{ errorResponse.symptom[0] }}
-    </p>
+      <!-- Link symptoms field -->
+      <label for="link-symptom">Link Symptoms</label>
+      <v-autocomplete
+        :items="symptoms"
+        v-model="disease.symptoms"
+        item-text="name"
+        item-value="uuid"
+        chips
+        deletable-chips
+        filled
+        multiple
+        solo
+        label="Link Symptoms"
+      ></v-autocomplete>
+      <p v-if="errorResponse.symptom" class="text-danger font-weight-light">
+        {{ errorResponse.symptom[0] }}
+      </p>
 
-    <!-- Disease classification field -->
-    <label for="link-classification">Link classifcations</label>
-    <v-autocomplete
-      :items="classifications"
-      v-model="disease.disease_classifications"
-      item-text="name"
-      item-value="uuid"
-      chips
-      deletable-chips
-      filled
-      multiple
-      solo
-      label="Link Classification"
-    ></v-autocomplete>
+      <!-- Disease classification field -->
+      <label for="link-classification">Link classifcations</label>
+      <v-autocomplete
+        :items="classifications"
+        v-model="disease.disease_classifications"
+        item-text="name"
+        item-value="uuid"
+        chips
+        deletable-chips
+        filled
+        multiple
+        solo
+        label="Link Classification"
+      ></v-autocomplete>
 
-    <!-- Disease category field -->
-    <label for="link-category">Link Categories</label>
-    <v-autocomplete
-      :items="categories"
-      v-model="disease.disease_categories"
-      item-text="name"
-      item-value="uuid"
-      chips
-      deletable-chips
-      multiple
-      solo
-      label="Link Category"
-    ></v-autocomplete>
+      <!-- Disease category field -->
+      <label for="link-category">Link Categories</label>
+      <v-autocomplete
+        :items="categories"
+        v-model="disease.disease_categories"
+        item-text="name"
+        item-value="uuid"
+        chips
+        deletable-chips
+        multiple
+        solo
+        label="Link Category"
+      ></v-autocomplete>
 
-    <button class="btn btn-primary" @click="createDisease">Create</button>
-  </form>
+      <button class="btn btn-primary" @click="createDisease">Create</button>
+    </form>
+  </div>
 </template>
 
 <script>
@@ -202,8 +205,7 @@ export default {
       });
       console.log("Create, available symptoms:");
       console.log(this.disease.symptoms);
-      let url =
-        "disease/admin/diseases/store-disease/";
+      let url = "disease/admin/diseases/store-disease/";
       this.$axios
         .post(url, {
           name: this.disease.name,
@@ -214,7 +216,7 @@ export default {
           symptom: this.disease.symptoms,
           disease_classification: this.disease.disease_classifications,
           disease_category: this.disease.disease_categories,
-          doctor_id: this.$store.getters.user.uuid
+          doctor_id: this.$store.getters.user.uuid,
         })
         .then((response) => {
           this.updateSuccess = response.data;

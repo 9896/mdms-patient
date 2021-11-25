@@ -59,6 +59,18 @@
           >
             <i class="fas fa-trash-alt"></i>
           </a>
+
+          <router-link
+            class="btn btn-tooltip"
+            data-toggle="tooltip"
+            data-placement="top"
+            title="Edit"
+            data-container="body"
+            data-animation="true"
+            :to="{ name: 'EditSymptom', params: { uuid: item.uuid } }"
+          >
+            <i class="fas fa-edit"></i>
+          </router-link>
         </div>
       </template>
     </v-data-table>
@@ -91,7 +103,7 @@ export default {
       activePage: "",
       headers: [
         { text: "Symptoms", align: "start", value: "name" },
-        { text: "Actions", sortable: "false", value: "actions" },
+        { text: "Actions", sortable: false, value: "actions" },
         //{ text: "Uuid", sortable: "false", value: "uuid" }
       ],
     };
@@ -105,7 +117,7 @@ export default {
   methods: {
     /**
      * Get all symptoms
-     * 
+     *
      * @param null
      * @return {null}
      */
@@ -145,7 +157,7 @@ export default {
 
     /**
      * Link to data-table headers
-     * 
+     *
      * @param {symptom}
      * @return {symptom} The symptom Object
      */
@@ -158,9 +170,9 @@ export default {
 
     /**
      * Handle page change
-     * 
+     *
      * @param { number } value The page number clicked
-     * @return { null } 
+     * @return { null }
      */
     handlePageChange(value) {
       this.page = value;
@@ -174,7 +186,7 @@ export default {
 
     /**
      * Search specific symtom(s)
-     * 
+     *
      * @param { null }
      * @return { string } noSymptom No symptom found
      */
@@ -227,10 +239,10 @@ export default {
         })
         .finally(() => loader.hide());
     },
-    
+
     /**
      * Delete symptom
-     * 
+     *
      * @param { string } uuid
      * @return { null }
      */
@@ -272,7 +284,7 @@ export default {
         if (result.value) {
           this.deleteSymptom(uuid);
           this.getAllSymptoms();
-        } 
+        }
       });
     },
   },

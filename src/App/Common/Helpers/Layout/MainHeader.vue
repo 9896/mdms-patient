@@ -3,8 +3,7 @@
   <div class="header bg-primary pb-6">
     <div class="container-fluid">
       <div class="header-body">
-        <div class="row align-items-center py-4">
-        </div>
+        <div class="row align-items-center py-4"></div>
         <!-- Card stats -->
         <div class="row">
           <div class="col-xl-3 col-md-6">
@@ -14,9 +13,9 @@
                 <div class="row">
                   <div class="col">
                     <h5 class="card-title text-uppercase text-muted mb-0">
-                      Total traffic
+                      Doctors 
                     </h5>
-                    <span class="h2 font-weight-bold mb-0">350,897</span>
+                    <span class="h2 font-weight-bold mb-0">{{doctors}}</span>
                   </div>
                   <div class="col-auto">
                     <div
@@ -32,12 +31,7 @@
                     </div>
                   </div>
                 </div>
-                <p class="mt-3 mb-0 text-sm">
-                  <span class="text-success mr-2"
-                    ><i class="fa fa-arrow-up"></i> 3.48%</span
-                  >
-                  <span class="text-nowrap">Since last month</span>
-                </p>
+
               </div>
             </div>
           </div>
@@ -48,9 +42,9 @@
                 <div class="row">
                   <div class="col">
                     <h5 class="card-title text-uppercase text-muted mb-0">
-                      New users
+                      Users
                     </h5>
-                    <span class="h2 font-weight-bold mb-0">2,356</span>
+                    <span class="h2 font-weight-bold mb-0">{{ users }}</span>
                   </div>
                   <div class="col-auto">
                     <div
@@ -66,12 +60,7 @@
                     </div>
                   </div>
                 </div>
-                <p class="mt-3 mb-0 text-sm">
-                  <span class="text-success mr-2"
-                    ><i class="fa fa-arrow-up"></i> 3.48%</span
-                  >
-                  <span class="text-nowrap">Since last month</span>
-                </p>
+
               </div>
             </div>
           </div>
@@ -82,9 +71,9 @@
                 <div class="row">
                   <div class="col">
                     <h5 class="card-title text-uppercase text-muted mb-0">
-                      Sales
+                      Symptoms
                     </h5>
-                    <span class="h2 font-weight-bold mb-0">924</span>
+                    <span class="h2 font-weight-bold mb-0">{{ symptoms }}</span>
                   </div>
                   <div class="col-auto">
                     <div
@@ -100,12 +89,7 @@
                     </div>
                   </div>
                 </div>
-                <p class="mt-3 mb-0 text-sm">
-                  <span class="text-success mr-2"
-                    ><i class="fa fa-arrow-up"></i> 3.48%</span
-                  >
-                  <span class="text-nowrap">Since last month</span>
-                </p>
+
               </div>
             </div>
           </div>
@@ -116,9 +100,9 @@
                 <div class="row">
                   <div class="col">
                     <h5 class="card-title text-uppercase text-muted mb-0">
-                      Performance
+                      Diseases
                     </h5>
-                    <span class="h2 font-weight-bold mb-0">49,65%</span>
+                    <span class="h2 font-weight-bold mb-0">{{ diseases }}</span>
                   </div>
                   <div class="col-auto">
                     <div
@@ -134,12 +118,7 @@
                     </div>
                   </div>
                 </div>
-                <p class="mt-3 mb-0 text-sm">
-                  <span class="text-success mr-2"
-                    ><i class="fa fa-arrow-up"></i> 3.48%</span
-                  >
-                  <span class="text-nowrap">Since last month</span>
-                </p>
+
               </div>
             </div>
           </div>
@@ -151,6 +130,50 @@
 
 <script>
 export default {
+  /**
+   * name
+   */
   name: "MainHeader",
+
+  /**
+   * Data
+   */
+  data() {
+    return {
+      doctors: '',
+      users:'',
+      symptoms:'',
+      diseases:'',
+    }
+  },
+
+  /**
+   * Methods
+   *
+   */
+  methods: {
+    getStatistics() {
+      let url = "disease/admin/diseases/get-statistics";
+      this.$axios
+        .get(url)
+        .then((response) => {
+          console.log(response);
+          this.doctors = response.data.doctors;
+          this.users = response.data.users;
+          this.symptoms = response.data.symptoms;
+          this.diseases = response.data.diseases;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+  },
+
+  /**
+   * Mounted hook
+   */
+  mounted() {
+    this.getStatistics();
+  },
 };
 </script>

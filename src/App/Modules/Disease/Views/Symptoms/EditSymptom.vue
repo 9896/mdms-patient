@@ -7,7 +7,7 @@
         type="text"
         class="form-control"
         id="symptom-name"
-        placeholder="Symptom Name"
+        placeholder="New Symptom Name"
       />
     </div>
     <!-- <p v-if="serverResponse" class="text-danger font-weight-light">

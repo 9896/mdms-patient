@@ -42,7 +42,7 @@
     </v-main>
   </v-app>
 
-  <!-- <div id="app" style="margin-top: 0px">
+ <!-- <div id="app" style="margin-top: 0px">
     <vue-page-transition name="">
       <router-view></router-view>
     </vue-page-transition>

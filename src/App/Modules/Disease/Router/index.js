@@ -2,6 +2,8 @@ import { AllDiseases } from "../Views"
 import { Articles } from "../Views"
 import { CreateDisease } from "../Views"
 import { EditDisease } from "../Views"
+import { Diagnose } from "../Views"
+import { ReadArticle } from "../Views"
 
 import { DiseaseBaseLayout } from "../Views"
 
@@ -56,6 +58,26 @@ export default [
                 meta: {
                     title: "Edit Disease",
                     requiresAuth: true
+                }
+            },
+            {
+                path: "/diseases/diagnose",
+                component: Diagnose,
+                name: 'Diagnose',
+                props: true,
+                meta: {
+                    title: "Diagnose Disease",
+                    requiresAuth: false
+                }
+            },
+            {
+                path: "/disease/read-article/:uuid",
+                component: ReadArticle,
+                name: "ReadArticle",
+                props: true,
+                meta: {
+                    title: "Read Article",
+                    requiresAuth: false
                 }
             },
             {

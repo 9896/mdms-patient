@@ -60,6 +60,10 @@
           </a>
         </div>
       </template>
+
+      <template v-slot:item.content="{ item }">
+        <p v-html="item.content"></p>
+      </template>
     </v-data-table>
 
     <div class="text-center pt-2">
@@ -90,12 +94,11 @@ export default {
       activePage: "",
       headers: [
         { text: "Diseases", align: "start", value: "name" },
-        { text: "Content", sortable: false, value: "content"},
-        {text: "Prevalence Rate", sortable: false, value: "prevelance_rate"},
-        {text: "Age start", sortable: false, value: "age_start"},
-        {text: "Age end", sortable: false, value: "age_end"},
+        { text: "Content", sortable: false, value: "content" },
+        { text: "Prevalence Rate", sortable: false, value: "prevelance_rate" },
+        { text: "Age start", sortable: false, value: "age_start" },
+        { text: "Age end", sortable: false, value: "age_end" },
         { text: "Actions", sortable: false, value: "actions" },
-      
       ],
     };
   },
@@ -108,7 +111,7 @@ export default {
   methods: {
     /**
      * Get all diseases
-     * 
+     *
      * @param null
      * @return {null}
      */
@@ -148,13 +151,13 @@ export default {
 
     /**
      * Link to data-table headers
-     * 
+     *
      * @param {disease}
      * @return {disease} The disease Object
      */
     getDisplayDisease(disease) {
       let slicedContent;
-      if(disease.content.length > 45){
+      if (disease.content.length > 45) {
         slicedContent = disease.content.slice(0, 45) + "...";
       }
       //kdkd
@@ -165,15 +168,14 @@ export default {
         prevlance_rate: disease.prevelance_rate,
         age_start: disease.age_start,
         age_end: disease.age_end,
-
       };
     },
 
     /**
      * Handle page change
-     * 
+     *
      * @param { number } value The page number clicked
-     * @return { null } 
+     * @return { null }
      */
     handlePageChange(value) {
       this.page = value;
@@ -187,7 +189,7 @@ export default {
 
     /**
      * Search specific symtom(s)
-     * 
+     *
      * @param { null }
      * @return { string } noDisease No disease found
      */
@@ -236,14 +238,14 @@ export default {
           console.log("Custom Error:" + error);
           if (error.response.data.errors.disease) {
             this.emptyQuery = error.response.data.errors.disease[0];
-         }
+          }
         })
         .finally(() => loader.hide());
     },
-    
+
     /**
      * Delete disease
-     * 
+     *
      * @param { string } uuid
      * @return { null }
      */
@@ -285,7 +287,7 @@ export default {
         if (result.value) {
           this.deleteDisease(uuid);
           this.getAllDiseases();
-        } 
+        }
       });
     },
   },

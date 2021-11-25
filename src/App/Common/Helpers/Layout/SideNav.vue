@@ -15,7 +15,7 @@
       <div class="sidenav-header align-items-center">
         <a class="navbar-brand" href="javascript:void(0)">
           <h4 class="navbar-heading p-0 text-muted">
-            <span class="docs-normal">MDMS</span>
+            <span class="docs-normal">Admin Dashboard</span>
           </h4>
         </a>
       </div>
@@ -72,6 +72,26 @@
             </li>
           </ul>
 
+          <!-- Divider -->
+          <hr class="my-3" />
+
+          <h6 class="navbar-heading p-0 text-muted">
+            <span class="docs-normal">Options</span>
+          </h6>
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <router-link :to="{ name: 'Diagnose' }" class="nav-link">
+                <i class="fas fa-stethoscope" aria-hidden="true"></i>
+                <span class="nav-link-text">Run Diagnosis</span></router-link
+              >
+            </li>
+            <li class="nav-item">
+              <router-link :to="{ name: 'Articles' }" class="nav-link">
+                <i class="fas fa-newspaper" aria-hidden="true"></i>
+                <span class="nav-link-text">Articles</span></router-link
+              >
+            </li>
+          </ul>
           <!-- Divider -->
           <hr class="my-3" />
           <!-- Heading -->
