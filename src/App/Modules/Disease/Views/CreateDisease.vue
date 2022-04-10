@@ -225,7 +225,7 @@ export default {
         })
         .catch((error) => {
           console.log(error);
-          console.log(error.response.data.errors);
+          //console.log(error.response.data.errors);
           //if (error.response.data.errors.name) {
           this.errorResponse = error.response.data.errors;
           console.log("serverResponse:");

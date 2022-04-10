@@ -1,17 +1,29 @@
 <template>
   <div ref="diseaseContainer">
-    <div class="row">
-      <div class="col-4">
-        <v-text-field
-          v-model="diseaseName"
-          label="Search Article by Disease Name"
-        ></v-text-field>
+    <form>
+      <div class="row">
+        <div class="col-lg-4">
+          <!-- <v-text-field
+            v-model="diseaseName"
+            label="Search Article by Disease Name"
+            @keyup.enter="searchDisease"
+          ></v-text-field> -->
+          <v-autocomplete
+            :items="inputDiseases"
+            v-model="selectedDisease"
+            item-text="name"
+            item-value="name"
+            clearable
+            label="Search Article by Disease Name"
+            @keyup.enter="searchDisease"
+          ></v-autocomplete>
+        </div>
+        <div class="col-lg-4">
+          <v-btn small @click="searchDisease"> Search </v-btn>
+        </div>
       </div>
-      <div class="col-4">
-        <v-btn small @click="searchDisease"> Search </v-btn>
-      </div>
-    </div>
-    <p v-if="emptyQuery" class="text-danger font-weight-light">
+    </form>
+    <p v-if="true" class="text-danger font-weight-light">
       {{ emptyQuery }}
     </p>
     <p v-if="searchQuery && !noDiseases">
@@ -29,7 +41,7 @@
     <h1 class="text-center">Disease Articles</h1>
     <!-- Cards -->
     <div class="row">
-      <div class="col-6" v-for="disease in diseases" :key="disease.uuid">
+      <div class="col-lg-6" v-for="disease in diseases" :key="disease.uuid">
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">{{ disease.name }}</h5>
@@ -73,13 +85,15 @@ export default {
   data() {
     return {
       diseases: [],
+      inputDiseases: [],
+      selectedDisease: "",
       page: undefined,
       pageCount: undefined,
       diseaseName: "",
       staticDiseaseName: "",
       searchQuery: false,
       noDiseases: false,
-      emptyQuery: false,
+      emptyQuery: "",
       activePage: "",
     };
   },
@@ -94,7 +108,7 @@ export default {
     getAllDiseases() {
       this.searchQuery = false;
       this.diseaseName = "";
-      this.emptyQuery = false;
+      this.emptyQuery = "";
       let diseaseContainer = this.$refs.diseaseContainer;
       console.log(this.$refs.diseaseContainer);
       let loader = this.$loading.show({
@@ -106,7 +120,7 @@ export default {
       });
       //get-all for diseases
       this.$axios
-        .get("disease/admin/diseases/get-all", {
+        .get("disease/patient/diseases/get-all", {
           params: {
             page: this.page,
           },
@@ -117,7 +131,49 @@ export default {
           this.diseases = unMappedDiseases.map(this.getDisplayDisease);
           this.page = response.data.meta.current_page;
           this.pageCount = response.data.meta.last_page;
+          console.log(this.diseases);
           console.log("From Get all Diseases: " + this.page);
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => loader.hide());
+    },
+
+     /**
+     * Get all diseases
+     *
+     * @param null
+     * @return {null}
+     */
+    inputGetAllDiseases() {
+      //this.searchQuery = false;
+      //this.emptyQuery = "";
+      let diseaseContainer = this.$refs.diseaseContainer;
+      console.log(this.$refs.diseaseContainer);
+      let loader = this.$loading.show({
+        container: diseaseContainer,
+        //isFullPage: false,
+        loader: this.loader,
+        //canCancel: true,
+        onCancel: this.cancelled,
+      });
+      //get-all for diseases
+      this.$axios
+        .get("disease/patient/diseases/get-all-input"//, {
+         // params: {
+           // page: this.page,
+         // },
+        //}
+        )
+        .then((response) => {
+          let unMappedDiseases = response.data.data;
+          this.inputDiseases = [];
+          this.inputDiseases = unMappedDiseases.map(this.getDisplayDisease);
+          // this.page = response.data.meta.current_page;
+          // this.pageCount = response.data.meta.last_page;
+          console.log(this.diseases);
+          //console.log("From Get all Diseases: " + this.page);
         })
         .catch((error) => {
           console.log(error);
@@ -156,8 +212,9 @@ export default {
     searchDisease() {
       let diseaseContainer = this.$refs.diseaseContainer;
       this.diseases = [];
-      this.emptyQuery = false;
+      this.emptyQuery = '';
       this.page = undefined;
+      this.pageCount = undefined;
       //this.emptyQuery
       let loader = this.$loading.show({
         container: diseaseContainer,
@@ -166,19 +223,15 @@ export default {
         //canCancel: true,
         onCancel: this.cancelled,
       });
+      console.log("non_auto: " +this.diseaseName);
+      console.log("auto: " +this.selectedDisease);
       //get-all for diseases
       this.$axios
         .post(
-          "disease/admin/diseases/get-diseases",
+          "disease/patient/diseases/get-diseases",
           {
-            disease: this.diseaseName,
-          },
-          {
-            params: {
-              page: this.page,
-            },
-          }
-        )
+            disease: this.selectedDisease,
+          })
         .then((response) => {
           let unMappedDiseases = [];
           unMappedDiseases = response.data.data;
@@ -199,8 +252,11 @@ export default {
           if (error.response.data.errors.disease) {
             this.emptyQuery = error.response.data.errors.disease[0];
           }
+          console.log("From Search Disease: "+this.emptyQuery);
         })
-        .finally(() => loader.hide());
+        .finally(() => {
+          this.inputGetAllDiseases();
+          loader.hide()});
     },
 
     /**
@@ -225,6 +281,7 @@ export default {
    */
   mounted() {
     this.getAllDiseases();
+    this.inputGetAllDiseases();
   },
 };
 </script>

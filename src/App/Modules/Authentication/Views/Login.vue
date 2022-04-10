@@ -7,7 +7,7 @@
           <div class="header-body text-center mb-7">
             <div class="row justify-content-center">
               <div class="col-xl-5 col-lg-6 col-md-8 px-5">
-                <h1 class="text-white">Welcome!</h1>
+                <h1 class="text-white">Welcome to MDMS!</h1>
                 <p class="text-lead text-white">
                   Use these awesome forms to login or create new account in your
                   project for free.
@@ -44,6 +44,10 @@
               </div>
               <div class="card-body px-lg-5 py-lg-5">
                 <form role="form" class="sign-in-form">
+                  <!-- CombinationError -->
+                  <small class="form-text text-danger" v-if="combinationError">
+                    {{ combinationError }}
+                  </small>
                   <div class="form-group mb-3">
                     <div
                       class="
@@ -101,6 +105,13 @@
                       custom-control custom-control-alternative custom-checkbox
                     "
                   >
+                    <span>
+                      <router-link :to="{ name: 'Reset' }" class="nav-link">
+                        <span class="small nav-link-inner--text"
+                          >Forgot password?</span
+                        >
+                      </router-link>
+                    </span>
                     <input
                       class="custom-control-input"
                       id=" customCheckLogin"
@@ -111,6 +122,13 @@
                     </label>
                   </div>
                   <div class="text-center">
+                    <span>
+                      <router-link :to="{ name: 'Register' }" class="nav-link">
+                        <span class="nav-link-inner--text"
+                          >Not yet a member? Register</span
+                        >
+                      </router-link>
+                    </span>
                     <button
                       type="button"
                       class="btn btn-primary my-4"
@@ -138,12 +156,13 @@ export default {
   data() {
     return {
       loginData: {
-        email: "ykeebler@example.com",
+        email: "a@gmail.com",
         password: "12345678",
       },
       formError: [],
       loader: "spinner",
       rep: "",
+      combinationError: false,
     };
   },
 
@@ -159,13 +178,16 @@ export default {
 
       this.formError = [];
       this.$axios
-        .post("/authentication/admins/login", this.loginData)
+        .post("/authentication/patients/login", this.loginData)
         .then((response) => {
+          if (response.data[0].message) {
+            this.combinationError = response.data[0].message;
+          }
           let token = response.data[0].access_token;
           if (token) {
             this.$store.dispatch("set_token", token);
-            this.setUserDetails("/admin/me");
-            this.$router.push({ name: "Home" });
+            this.setUserDetails("/patient/me");
+            this.$router.push({ name: "Diagnose" });
           }
         })
         .catch((err) => {

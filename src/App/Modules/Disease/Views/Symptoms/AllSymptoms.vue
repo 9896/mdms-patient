@@ -1,13 +1,23 @@
 <template>
   <div ref="symptomContainer">
+    <h1>Track Symptom</h1>
     <div class="row">
-      <div class="col-4">
-        <v-text-field
+      <div class="col-lg-4">
+        <!-- <v-text-field
           v-model="symptomName"
           label="Search by Symptom Name"
-        ></v-text-field>
+        ></v-text-field> -->
+        <v-autocomplete
+          :items="inputSymptoms"
+          v-model="selectedSymptom"
+          item-text="name"
+          item-value="name"
+          clearable
+          label="Search by Symptom Name"
+          @keyup.enter="searchSymptom"
+        ></v-autocomplete>
       </div>
-      <div class="col-4">
+      <div class="col-lg-4">
         <v-btn small @click="searchSymptom"> Search </v-btn>
       </div>
     </div>
@@ -40,36 +50,12 @@
             class="btn btn-tooltip"
             data-toggle="tooltip"
             data-placement="top"
-            title="Edit"
+            title="Track Symptom"
             data-container="body"
             data-animation="true"
-            :to="{ name: 'EditSymptom', params: { uuid: item.uuid } }"
+            :to="{ name: 'TrackSymptom', params: { uuid: item.uuid } }"
           >
-            <i class="fas fa-edit"></i>
-          </router-link>
-          <a
-            class="btn btn-tooltip"
-            data-toggle="tooltip"
-            data-placement="top"
-            title="Delete"
-            data-container="body"
-            data-animation="true"
-            href="#"
-            @click="deleteAlertDisplay(item.uuid)"
-          >
-            <i class="fas fa-trash-alt"></i>
-          </a>
-
-          <router-link
-            class="btn btn-tooltip"
-            data-toggle="tooltip"
-            data-placement="top"
-            title="Edit"
-            data-container="body"
-            data-animation="true"
-            :to="{ name: 'EditSymptom', params: { uuid: item.uuid } }"
-          >
-            <i class="fas fa-edit"></i>
+            <i class="fas fa-assistive-listening-systems"></i>
           </router-link>
         </div>
       </template>
@@ -93,6 +79,8 @@ export default {
     return {
       loader: "dots",
       symptoms: [],
+      inputSymptoms: [],
+      selectedSymptom: '',
       symptomName: "",
       staticSymptomName: "",
       searchQuery: false,
@@ -136,7 +124,7 @@ export default {
       });
       //get-all for symptoms
       this.$axios
-        .get("symptom/admin/symptoms/get-all", {
+        .get("symptom/patient/symptoms/get-all", {
           params: {
             page: this.page,
           },
@@ -148,6 +136,39 @@ export default {
           this.page = response.data.meta.current_page;
           this.pageCount = response.data.meta.last_page;
           console.log("From Get all Symptoms: " + this.page);
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => loader.hide());
+    },
+
+        /**
+     * Get all symptoms
+     *
+     * @param null
+     * @return {null}
+     */
+    getAllInputSymptoms() {
+      this.symptomName = "";
+      let symptomContainer = this.$refs.symptomContainer;
+      console.log(this.$refs.symptomContainer);
+      let loader = this.$loading.show({
+        container: symptomContainer,
+        //isFullPage: false,
+        loader: this.loader,
+        //canCancel: true,
+        onCancel: this.cancelled,
+      });
+      //get-all for symptoms
+      this.$axios
+        .get("symptom/patient/symptoms/get-all/true")
+        .then((response) => {
+          let unMappedSymptoms = response.data.data;
+          this.inputSymptoms = [];
+          this.inputSymptoms = unMappedSymptoms.map(this.getDisplaySymptom);
+
+          console.log("From Get all Symptoms: ");
         })
         .catch((error) => {
           console.log(error);
@@ -206,22 +227,16 @@ export default {
       //get-all for symptoms
       this.$axios
         .post(
-          "symptom/admin/symptoms/get-symptoms",
+          "symptom/patient/symptoms/get-symptoms",
           {
-            symptom: this.symptomName,
-          },
-          {
-            params: {
-              page: this.page,
-            },
-          }
-        )
+            symptom: this.selectedSymptom,
+          })
         .then((response) => {
           let unMappedSymptoms = [];
           unMappedSymptoms = response.data.data;
           this.symptoms = [];
           this.searchQuery = true;
-          this.staticSymptomName = this.symptomName;
+          this.staticSymptomName = this.selectedSymptom;
           if (unMappedSymptoms.length == 0) {
             return (this.noSymptoms = response.data);
           }
@@ -237,58 +252,15 @@ export default {
             this.emptyQuery = error.response.data.errors.symptom[0];
           }
         })
-        .finally(() => loader.hide());
-    },
-
-    /**
-     * Delete symptom
-     *
-     * @param { string } uuid
-     * @return { null }
-     */
-    deleteSymptom(uuid) {
-      let symptomContainer = this.$refs.symptomContainer;
-      //this.emptyQuery
-      let loader = this.$loading.show({
-        container: symptomContainer,
-        //isFullPage: false,
-        loader: this.loader,
-        //canCancel: true,
-        onCancel: this.cancelled,
-      });
-      //get-all for symptoms
-      let url = "symptom/admin/symptoms/delete-symptom/" + uuid;
-      this.$axios
-        .post(url)
-        .then((response) => {
-          console.log("hehe" + response.data);
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-        .finally(() => loader.hide());
-    },
-
-    deleteAlertDisplay(uuid) {
-      this.$swal({
-        title: "Are you sure?",
-        text: "You can't revert your action",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Delete",
-        cancelButtonText: "Cancel",
-        showCloseButton: true,
-        showLoaderOnConfirm: true,
-      }).then((result) => {
-        console.log(result.value);
-        if (result.value) {
-          this.deleteSymptom(uuid);
-          this.getAllSymptoms();
-        }
-      });
+        .finally(() => {
+          this.getAllInputSymptoms();
+          loader.hide()
+          });
+          
     },
   },
   mounted() {
+    this.getAllInputSymptoms();
     this.getAllSymptoms();
   },
 };

@@ -1,7 +1,7 @@
 <template>
   <div ref="diseaseContainter" class="row">
     <div class="col"></div>
-    <div class="col-6">
+    <div class="col-lg-6">
       <!-- Disease Name and Content -->
       <div>
         <h1>{{ disease.name }}</h1>
@@ -104,7 +104,7 @@ export default {
         //canCancel: true,
         onCancel: this.cancelled,
       });
-      let url = "disease/admin/diseases/get-disease/" + this.$route.params.uuid;
+      let url = "disease/patient/diseases/get-disease/" + this.$route.params.uuid;
       this.$axios
         .get(url)
         .then((response) => {

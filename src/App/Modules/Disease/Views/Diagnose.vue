@@ -2,29 +2,31 @@
   <div ref="diagnoseContainer">
     <h1>Run Diagnosis</h1>
     <label for="disease-by-symptom">Search Disease By Symptom</label>
-    <div class="row">
-      <div class="col-8">
-        <!-- Link symptoms field -->
-        <v-autocomplete
-          :items="symptoms"
-          v-model="diseaseSymptoms"
-          item-text="name"
-          item-value="uuid"
-          chips
-          deletable-chips
-          
-          multiple
-          solo
-          label="Type symptom"
-        ></v-autocomplete>
-        <p v-if="errorResponse" class="text-danger font-weight-light">
-          {{ errorResponse }}
-        </p>
+    <form>
+      <div class="row">
+        <div class="col-lg-8">
+          <!-- Link symptoms field -->
+          <v-autocomplete
+            :items="symptoms"
+            v-model="diseaseSymptoms"
+            item-text="name"
+            item-value="uuid"
+            chips
+            deletable-chips
+            clearable
+            multiple
+            label="Type symptom"
+            @keyup.enter="getDiseaseBySymptoms"
+          ></v-autocomplete>
+          <p v-if="errorResponse" class="text-danger font-weight-light">
+            {{ errorResponse }}
+          </p>
+        </div>
+        <div class="col-lg-4">
+          <v-btn small @click="getDiseaseBySymptoms"> Search </v-btn>
+        </div>
       </div>
-      <div class="col-4">
-        <v-btn small @click="getDiseaseBySymptoms"> Search </v-btn>
-      </div>
-    </div>
+    </form>
     <div class="row">
       <div class="col">
         <v-data-table
@@ -98,7 +100,7 @@ export default {
         //canCancel: true,
         onCancel: this.cancelled,
       });
-      let url = "symptom/admin/symptoms/get-all/" + "true";
+      let url = "symptom/patient/symptoms/get-all/" + "true";
       this.$axios
         .get(url)
         .then((response) => {
@@ -130,7 +132,8 @@ export default {
         //canCancel: true,
         onCancel: this.cancelled,
       });
-      let url = "disease/diseases/get-disease-by-symptoms";
+
+      let url = "disease/patient/diseases/get-disease-by-symptoms";
       this.$axios
         .post(url, {
           symptom: this.diseaseSymptoms,
@@ -139,7 +142,7 @@ export default {
           let unMappedDiseases = response.data.data;
           this.diseases = [];
           this.diseases = unMappedDiseases.map(this.getDisplayDisease);
-          console.log("Some matched Diseases")
+          console.log("Some matched Diseases");
           console.log(unMappedDiseases);
         })
         .catch((error) => {
@@ -151,17 +154,16 @@ export default {
 
     /**
      * Display disease in datatable
-     * 
+     *
      * @param { array } disease
      * @return { array } disease
      */
     getDisplayDisease(disease) {
       return {
         name: disease.name,
-        uuid: disease.uuid
-      }
-    }
-
+        uuid: disease.uuid,
+      };
+    },
   },
   mounted() {
     this.getAllSymptoms();

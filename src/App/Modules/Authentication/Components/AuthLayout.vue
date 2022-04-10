@@ -13,9 +13,7 @@
       "
     >
       <div class="container">
-        <router-link to="{name: 'Home}">
-          <img src="" />
-        </router-link>
+
         <button
           class="navbar-toggler"
           type="button"
@@ -54,12 +52,8 @@
               </div>
             </div>
           </div>
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-              <router-link :to="{ name: 'Home' }" class="nav-link">
-                <span class="nav-link-inner--text">Dashboard</span>
-              </router-link>
-            </li>
+          <!-- <ul class="navbar-nav mr-auto">
+
             <li class="nav-item">
               <router-link :to="{ name: 'Login' }" class="nav-link">
                 <span class="nav-link-inner--text">Login</span>
@@ -70,7 +64,7 @@
                 <span class="nav-link-inner--text">Register</span>
               </router-link>
             </li>
-          </ul>
+          </ul> -->
         </div>
       </div>
     </nav>

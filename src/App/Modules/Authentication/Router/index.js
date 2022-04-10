@@ -1,5 +1,6 @@
 import { Login } from "@/App/Modules/Authentication/Views";
 import { Register } from "@/App/Modules/Authentication/Views";
+import { Reset } from "@/App/Modules/Authentication/Views";
 
 export default [
     {
@@ -17,5 +18,13 @@ export default [
         meta: {
             title: "Register"
         }
-    }
+    },
+    {
+        path: "/reset",
+        component: Reset,
+        name: "Reset",
+        meta: {
+            title: "Reset"
+        }
+    },
 ]

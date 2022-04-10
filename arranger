@@ -1,0 +1,26 @@
+What are you doing
+Why are you doing
+How will you do it
+
+-----------AUTHENTICATION REVIEW------------
+WHAT?
+A. Go through the code structure without taking specific 
+interest in syntax and meaning, just code flow
+B. Take note of location of different modules concerning
+auth and why they were placed as so and possibility of 
+refactoring
+WHY?
+A. To better understand best programming and grouping 
+practices
+B. To have a better understanding and renewed perspective
+of my currently adopted practices
+HOW?
+A. I will go through the code in relaxed state assuming 
+am not the writer or never had knowledge of the code.
+
+--------RESULT----------
+1. Most of the code looks like spaghetti code
+2. The structure might be confusing with some folders seeming irrelevant
+3. Improve on commenting.
+4. The arrangement of code does not provide a completely clear explanation of
+what is going on.( code quality )
