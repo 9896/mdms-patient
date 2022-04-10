@@ -156,7 +156,7 @@ export default {
   data() {
     return {
       loginData: {
-        email: "a@gmail.com",
+        email: "patientC@gmail.com",
         password: "12345678",
       },
       formError: [],

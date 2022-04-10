@@ -21,6 +21,7 @@ import { DoctorPermissions } from "../Views/Symptoms"
 import { CreateDoctor } from "../Views/Symptoms"
 
 import { Contact } from "../Views/Symptoms"
+import { Profile } from "../Views/Symptoms"
 
 
 export default [
@@ -188,7 +189,17 @@ export default [
                     title: "Contuct us",
                     requiresAuth: true
                 } 
-            }
+            },
+            {
+                path: "/profile",
+                component: Profile,
+                name: "Profile",
+                props: true,
+                meta: {
+                    title: "Profile",
+                    requiresAuth: true
+                } 
+            },
         ]
 
     }

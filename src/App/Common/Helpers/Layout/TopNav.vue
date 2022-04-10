@@ -1,13 +1,6 @@
 <template>
   <!-- Topnav -->
-  <nav
-    class="
-      navbar navbar-expand-lg navbar-dark
-      bg-primary
-      
-    "
-  >
-  
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <h1 class="text-center navbar-text">MDMS</h1>
     <button
       class="navbar-toggler"
@@ -49,6 +42,12 @@
         <li class="nav-item right" style="text-color: white">
           <router-link :to="{ name: 'Contact' }" class="nav-link"
             >Contact a Doctor</router-link
+          >
+        </li>
+        <li class="nav-item">
+          <router-link :to="{ name: 'Profile' }" class="nav-link">
+            <i class="fa-solid fa-user" aria-hidden="true"></i>
+            <span class="nav-link-text">Profile</span></router-link
           >
         </li>
         <li class="nav-item right" style="text-color: white">
@@ -155,10 +154,10 @@ nav {
   width: 100%;
 }
 
-@media(min-width: 991px){
+@media (min-width: 991px) {
   ul.left {
-  position: absolute;
-  right: 0;
-}
+    position: absolute;
+    right: 0;
+  }
 }
 </style>
